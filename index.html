@@ -13,7 +13,7 @@
             document.getElementById("demo").innerHTML = "Paragraph 3";
         }
 
-        function genIndSquare(index, val){
+        function genIndSquare(index, val, WidthSum){
             var square = document.createElement("div");
             square.style.position = "absolute";
             var leftOff = 50 * index + 5;
@@ -36,10 +36,10 @@
         function genAllSquare(){
             var points = [1, 2, 3, 4, 5, 2, 7, 6 , 4];
             var container = document.getElementById("container");
-//            var WidthSum = {val:0};
+            var WidthSum = {val:0};
             
             for(iter = 0; iter < points.length; ++iter)
-            { container.appendChild(genIndSquare(iter, points[iter])); }
+            { container.appendChild(genIndSquare(iter, points[iter], WidthSum)); }
         } 
 
     </script>
