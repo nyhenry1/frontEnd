@@ -1,33 +1,24 @@
 <html>
     <head>
     <script>
-        function myFunction1(){
-            document.getElementById("demo").innerHTML = "Paragraph 1.";
-        }
-        
-        function myFunction2(){
-            document.getElementById("demo").innerHTML = "Paragraph 2";
-        }
 
-        function myFunction3(){
-            document.getElementById("demo").innerHTML = "Paragraph 3";
-        }
+        function addPx(str)
+        { return str + "px"; }
 
         function genIndSquare(index, val, WidthSum){
             var square = document.createElement("div");
             square.style.position = "absolute";
             var leftOff = 50 * index + 5;
-            square.style.left = leftOff + "px" ;
-            square.style.width = "40px";
+            square.style.left = addPx(leftOff);
+            square.style.width = addPx(40);
 
             var newHeight = 50 * val;
-            square.style.height = newHeight + "px"; 
+            square.style.height = addPx(newHeight); 
             
             var bot = 50 * 10;
             var newTop = bot - newHeight;
 
-            square.style.top = newTop + "px";
-            
+            square.style.top = addPx(newTop);
             square.style.background = "red";
             square.innerHTML = "divEle";
             var incSum = index == 0? 45: 50;
@@ -35,17 +26,7 @@
             return square;    
         }
 
-        function genAllSquare(maxWidth){
-            var points = [1, 2, 3, 4, 5, 2, 7, 6, 4];
-            var container = document.getElementById("container");
-            var WidthSum = {val:0};
-            
-            for(iter = 0; iter < points.length && WidthSum.val <= maxWidth; ++iter)
-            { container.appendChild(genIndSquare(iter, points[iter], WidthSum)); }
-        } 
-
         function createColumn(topVal, leftVal, widthVal, heightVal){
-            alert("create Col is called");
             var points = [1, 2, 3, 4, 5, 2, 7, 6, 4];
             var container = document.getElementById("container");
             var WidthSum = {val:0};
@@ -54,9 +35,16 @@
         }
 
         function createChart(topVal, leftVal, widthVal, heightVal){
-            alert("create char is called");
+            clearScr();
             var colHeightVal = heightVal * 0.9;
             createColumn(topVal, leftVal, widthVal, colHeightVal);
+        }
+
+        function clearScr(){
+            var container = document.getElementById("container");
+            while(container.firstChild){ 
+                container.removeChild(container.firstChild);
+            }
         }
 
     </script>
@@ -64,9 +52,9 @@
     <body> hello
         <p id = "demo"> A paragraph</p>
         <div id ="container" name = "container"> this is container </div>
-        <button type = "button" onclick = "genAllSquare(400)">Try 1</button>
-        <button type = "button" onclick = "genAllSquare(300)">Try 2</button>
-        <button type = "button" onclick = "genAllSquare(200)">Try 3</button>
-        <button onclick = "createChart(0, 0, 800, 500)"> Try create</button>
+        <button type = "button" onclick = "createChart(0, 0, 100, 500)">Try 1</button>
+        <button type = "button" onclick = "createChart(0, 0, 200, 500)">Try 2</button>
+        <button type = "button" onclick = "createChart(0, 0, 300, 500)">Try 3</button>
+        <button onclick = "createChart(0, 0, 400, 500)"> Try create</button>
     </body>
 </html>
