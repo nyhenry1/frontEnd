@@ -30,26 +30,43 @@
             
             square.style.background = "red";
             square.innerHTML = "divEle";
+            var incSum = index == 0? 45: 50;
+            WidthSum.val = WidthSum.val + incSum;
             return square;    
         }
 
-        function genAllSquare(){
+        function genAllSquare(maxWidth){
             var points = [1, 2, 3, 4, 5, 2, 7, 6 , 4];
             var container = document.getElementById("container");
             var WidthSum = {val:0};
             
-            for(iter = 0; iter < points.length; ++iter)
+            for(iter = 0; iter < points.length && WidthSum.val <= maxWidth; ++iter)
             { container.appendChild(genIndSquare(iter, points[iter], WidthSum)); }
         } 
+/*
+        function createColumn(top, left, width, height){
+            var points = [1, 2, 3, 4, 5, 2, 7, 6, 4];
+            var container = document.getElementById("container");
+            var WidthSum = {val:0};
 
+            for(iter = 0; iter < points.length && Widht.val <= width; ++iter)
+            { container.appendChild(genIndSquare(iter, points[iter], WidthSum)); }
+
+        }
+
+        function createChart(top, left, width, height){
+            val colHeight = height * 0.9;
+            createColumn(top, left, width, colHeight);
+        }
+*/
     </script>
     </head>
     <body> hello
         <p id = "demo"> A paragraph</p>
         <div id ="container" name = "container"> this is container </div>
-        <button type = "button" onclick = "myFunction1()">Try 1</button>
-        <button type = "button" onclick = "myFunction2()">Try 2</button>
-        <button type = "button" onclick = "myFunction3()">Try 3</button>
-        <button onclick = "genAllSquare()"> Try create</button>
+        <button type = "button" onclick = "genAllSquare(400)">Try 1</button>
+        <button type = "button" onclick = "genAllSquare(300)">Try 2</button>
+        <button type = "button" onclick = "genAllSquare(200)">Try 3</button>
+        <button onclick = "genAllSquare(100)"> Try create</button>
     </body>
 </html>
