@@ -36,29 +36,29 @@
         }
 
         function genAllSquare(maxWidth){
-            var points = [1, 2, 3, 4, 5, 2, 7, 6 , 4];
+            var points = [1, 2, 3, 4, 5, 2, 7, 6, 4];
             var container = document.getElementById("container");
             var WidthSum = {val:0};
             
             for(iter = 0; iter < points.length && WidthSum.val <= maxWidth; ++iter)
             { container.appendChild(genIndSquare(iter, points[iter], WidthSum)); }
         } 
-/*
-        function createColumn(top, left, width, height){
+
+        function createColumn(topVal, leftVal, widthVal, heightVal){
+            alert("create Col is called");
             var points = [1, 2, 3, 4, 5, 2, 7, 6, 4];
             var container = document.getElementById("container");
             var WidthSum = {val:0};
-
-            for(iter = 0; iter < points.length && Widht.val <= width; ++iter)
-            { container.appendChild(genIndSquare(iter, points[iter], WidthSum)); }
-
+            for(iter = 0; iter < points.length && WidthSum.val <= widthVal; ++iter)
+            { container.appendChild(genIndSquare(iter, points[iter], WidthSum));  }
         }
 
-        function createChart(top, left, width, height){
-            val colHeight = height * 0.9;
-            createColumn(top, left, width, colHeight);
+        function createChart(topVal, leftVal, widthVal, heightVal){
+            alert("create char is called");
+            var colHeightVal = heightVal * 0.9;
+            createColumn(topVal, leftVal, widthVal, colHeightVal);
         }
-*/
+
     </script>
     </head>
     <body> hello
@@ -67,6 +67,6 @@
         <button type = "button" onclick = "genAllSquare(400)">Try 1</button>
         <button type = "button" onclick = "genAllSquare(300)">Try 2</button>
         <button type = "button" onclick = "genAllSquare(200)">Try 3</button>
-        <button onclick = "genAllSquare(100)"> Try create</button>
+        <button onclick = "createChart(0, 0, 800, 500)"> Try create</button>
     </body>
 </html>
