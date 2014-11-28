@@ -22,14 +22,16 @@
             return square;    
         }
 
-        function impleColumns(colBloTop, colBloLeft, colBloWidth, colBloHeight, points, showNum){
+        function impleColumns(colBloTop, colBloLeft, colBloWidth, colBloHeight, colBorderWidth, points, showNum){
+            colBloWidth -= colBorderWidth * 2;
+            colBloHeight -= colBorderWidth * 2;
             var columns = document.getElementById("colBlo");
             var maxHeight = 0; 
             var showPointNum = Math.min(points.length, showNum);
             for(iter = 0; iter < showPointNum; ++iter)
                 maxHeight = Math.max(points[iter], maxHeight);  
 
-            var widthUnit = colBloWidth/ showPointNum;
+            var widthUnit = colBloWidth / showPointNum;
             var heightUnit = colBloHeight/ maxHeight;
             
             for(iter = 0; iter < showPointNum;  ++iter)
@@ -44,11 +46,12 @@
             columns.innerHTML = "this is a colBlock";
             columns.style.top = addPx(colBloTop);
             columns.style.left = addPx(colBloLeft);
-            columns.style.width = addPx(colBloWidth);
-            columns.style.height = addPx(colBloHeight);
-            columns.style.border = "5px solid blue";
+            var colBorderWidth = 5;
+            columns.style.width = addPx(colBloWidth - colBorderWidth *2);
+            columns.style.height = addPx(colBloHeight - colBorderWidth *2);
+            columns.style.border = colBorderWidth + "px solid blue";
             chart.appendChild(columns);
-            impleColumns(colBloTop, colBloLeft, colBloWidth, colBloHeight, points, showNum);
+            impleColumns(colBloTop, colBloLeft, colBloWidth, colBloHeight, colBorderWidth, points, showNum);
         }
 
         function createTimeBut(butTop, butLeft, butWidth, butHeight, text){
@@ -68,9 +71,10 @@
             butBlock.style.position = "absolute";
             butBlock.style.top = addPx(butBloTop);
             butBlock.style.left = addPx(butBloLeft);
-            butBlock.style.width = addPx(butBloWidth);
-            butBlock.style.height = addPx(butBloHeight);
-            butBlock.style.border = "5px solid yellow";
+            var butBorderWidth = 5;
+            butBlock.style.width = addPx(butBloWidth - 2 * butBorderWidth);
+            butBlock.style.height = addPx(butBloHeight - 2 * butBorderWidth);
+            butBlock.style.border = butBorderWidth + "px solid yellow";
 
             var chart = document.getElementById("chart");
             var button = document.createElement("button");
@@ -85,27 +89,27 @@
 
             weekBut.addEventListener("click", function weekOnClick(){
                 clearColumns();
-                impleColumns(colBloTop, colBloLeft, colBloWidth, colBloHeight, points, 7); 
+                impleColumns(colBloTop, colBloLeft, colBloWidth, colBloHeight, 5, points, 7); 
             });
 
             oneMonBut.addEventListener("click", function oneMonButOnClick(){
                 clearColumns();
-                impleColumns(colBloTop, colBloLeft, colBloWidth, colBloHeight, points, 30); 
+                impleColumns(colBloTop, colBloLeft, colBloWidth, colBloHeight, 5, points, 30); 
             });
 
             triMonBut.addEventListener("click", function triMonOnClick(){
                 clearColumns();
-                impleColumns(colBloTop, colBloLeft, colBloWidth, colBloHeight, points, 90);
+                impleColumns(colBloTop, colBloLeft, colBloWidth, colBloHeight, 5, points, 90);
             });
 
             oneYearBut.addEventListener("click", function oneYearOnClick(){
                 clearColumns();
-                impleColumns(colBloTop, colBloLeft, colBloWidth, colBloHeight, points, 365);
+                impleColumns(colBloTop, colBloLeft, colBloWidth, colBloHeight, 5, points, 365);
             });
 
             maxBut.addEventListener("click", function maxOnClick(){
                 clearColumns();
-                impleColumns(colBloTop, colBloLeft, colBloWidth, colBloHeight, points, 3650);
+                impleColumns(colBloTop, colBloLeft, colBloWidth, colBloHeight, 5, points, 3650);
             });
 
             butBlock.appendChild(weekBut);
