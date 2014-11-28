@@ -5,56 +5,150 @@
         function addPx(str)
         { return str + "px"; }
 
-        function genIndSquare(index, val, WidthSum){
+        function genIndSquare(index, val, colBloTop, colBloHeight, widthUnit, heightUnit){
             var square = document.createElement("div");
             square.style.position = "absolute";
-            var leftOff = 50 * index + 5;
+            var leftOff = widthUnit * index;
             square.style.left = addPx(leftOff);
-            square.style.width = addPx(40);
+            square.style.width = addPx(widthUnit);
 
-            var newHeight = 50 * val;
+            var newHeight = heightUnit * val;
             square.style.height = addPx(newHeight); 
             
-            var bot = 50 * 10;
-            var newTop = bot - newHeight;
-
+            var newTop = colBloTop + colBloHeight - newHeight;
             square.style.top = addPx(newTop);
             square.style.background = "red";
-            square.innerHTML = "divEle";
-            var incSum = index == 0? 45: 50;
-            WidthSum.val = WidthSum.val + incSum;
+            var incSum = widthUnit; 
             return square;    
         }
 
-        function createColumn(topVal, leftVal, widthVal, heightVal){
-            var points = [1, 2, 3, 4, 5, 2, 7, 6, 4];
-            var container = document.getElementById("container");
-            var WidthSum = {val:0};
-            for(iter = 0; iter < points.length && WidthSum.val <= widthVal; ++iter)
-            { container.appendChild(genIndSquare(iter, points[iter], WidthSum));  }
+        function impleColumns(colBloTop, colBloLeft, colBloWidth, colBloHeight, points, showNum){
+            var columns = document.getElementById("colBlo");
+            var maxHeight = 0; 
+            var showPointNum = Math.min(points.length, showNum);
+            for(iter = 0; iter < showPointNum; ++iter)
+                maxHeight = Math.max(points[iter], maxHeight);  
+
+            var widthUnit = colBloWidth/ showPointNum;
+            var heightUnit = colBloHeight/ maxHeight;
+            
+            for(iter = 0; iter < showPointNum;  ++iter)
+                columns.appendChild(genIndSquare(iter, points[iter], colBloTop, colBloHeight, widthUnit, heightUnit));  
         }
 
-        function createChart(topVal, leftVal, widthVal, heightVal){
-            clearScr();
-            var colHeightVal = heightVal * 0.9;
-            createColumn(topVal, leftVal, widthVal, colHeightVal);
+        function createColumns(colBloTop, colBloLeft, colBloWidth, colBloHeight, points, showNum){
+            var chart = document.getElementById("chart");
+            var columns = document.createElement("colBlo");
+            columns.id = "colBlo";
+            columns.style.position = "absolute";
+            columns.innerHTML = "this is a colBlock";
+            columns.style.top = addPx(colBloTop);
+            columns.style.left = addPx(colBloLeft);
+            columns.style.width = addPx(colBloWidth);
+            columns.style.height = addPx(colBloHeight);
+            columns.style.border = "5px solid blue";
+            chart.appendChild(columns);
+            impleColumns(colBloTop, colBloLeft, colBloWidth, colBloHeight, points, showNum);
         }
 
-        function clearScr(){
-            var container = document.getElementById("container");
-            while(container.firstChild){ 
-                container.removeChild(container.firstChild);
-            }
+        function createTimeBut(butTop, butLeft, butWidth, butHeight, text){
+            var button = document.createElement("button");    
+            button.innerHTML = text;
+            button.style.position = "absolute";
+            button.style.top = addPx(butTop);
+            button.style.left = addPx(butLeft);
+            button.style.height = butHeight;
+            return button;
         }
 
-    </script>
+        function createButtons(butBloTop, butBloLeft, butBloWidth, butBloHeight, colBloTop, colBloLeft, colBloWidth, colBloHeight, points){
+
+            var butBlock = document.createElement("butBlo");
+            butBlock.innerHTML = "this is butBlock";
+            butBlock.style.position = "absolute";
+            butBlock.style.top = addPx(butBloTop);
+            butBlock.style.left = addPx(butBloLeft);
+            butBlock.style.width = addPx(butBloWidth);
+            butBlock.style.height = addPx(butBloHeight);
+            butBlock.style.border = "5px solid yellow";
+
+            var chart = document.getElementById("chart");
+            var button = document.createElement("button");
+
+            chart.appendChild(butBlock);
+
+            var weekBut = createTimeBut(0, 0, 30, 20, "week"); 
+            var oneMonBut = createTimeBut(0, 130, 30, 20, "one month");
+            var triMonBut = createTimeBut(0, 260, 30, 20, "three month");
+            var oneYearBut = createTimeBut(0, 390, 30, 20, "one year");
+            var maxBut = createTimeBut(0, 520, 30, 20, "max");
+
+            weekBut.addEventListener("click", function weekOnClick(){
+                clearColumns();
+                impleColumns(colBloTop, colBloLeft, colBloWidth, colBloHeight, points, 7); 
+            });
+
+            oneMonBut.addEventListener("click", function oneMonButOnClick(){
+                clearColumns();
+                impleColumns(colBloTop, colBloLeft, colBloWidth, colBloHeight, points, 30); 
+            });
+
+            triMonBut.addEventListener("click", function triMonOnClick(){
+                clearColumns();
+                impleColumns(colBloTop, colBloLeft, colBloWidth, colBloHeight, points, 90);
+            });
+
+            oneYearBut.addEventListener("click", function oneYearOnClick(){
+                clearColumns();
+                impleColumns(colBloTop, colBloLeft, colBloWidth, colBloHeight, points, 365);
+            });
+
+            maxBut.addEventListener("click", function maxOnClick(){
+                clearColumns();
+                impleColumns(colBloTop, colBloLeft, colBloWidth, colBloHeight, points, 3650);
+            });
+
+            butBlock.appendChild(weekBut);
+            butBlock.appendChild(oneMonBut);
+            butBlock.appendChild(triMonBut);
+            butBlock.appendChild(oneYearBut);
+            butBlock.appendChild(maxBut);
+        }
+
+        function impleChart(charTop, charLeft, charWidth, charHeight, points){
+
+            var chart = document.getElementById("chart");
+            chart.style.position = "absolute";
+            chart.style.top = addPx(charTop);
+            chart.style.left = addPx(charLeft);
+            chart.style.height = addPx(charHeight);
+            chart.style.width = addPx(charWidth);
+            chart.style.border = "5px solid red";
+
+            var colBloHeight = charHeight * 0.9;
+
+            createColumns(0, 0, charWidth, colBloHeight, points, 7);
+            var butBloHeight = charHeight * 0.1;
+            createButtons(colBloHeight, 0, charWidth, butBloHeight, 0,  0, charWidth, colBloHeight, points);
+        }
+
+        function clearColumns(){
+            var columns = document.getElementById("colBlo");
+            for(iter = columns.childElementCount - 1; iter > -1; --iter)
+                columns.removeChild(columns.children[iter]);
+        }
+
+        </script>
     </head>
+
     <body> hello
         <p id = "demo"> A paragraph</p>
-        <div id ="container" name = "container"> this is container </div>
-        <button type = "button" onclick = "createChart(0, 0, 100, 500)">Try 1</button>
-        <button type = "button" onclick = "createChart(0, 0, 200, 500)">Try 2</button>
-        <button type = "button" onclick = "createChart(0, 0, 300, 500)">Try 3</button>
-        <button onclick = "createChart(0, 0, 400, 500)"> Try create</button>
+        <div id = "chart" name = "chart"></div> 
+        <script type = "text/javascript">
+            var points =[];
+            for(iter = 0; iter < 200; ++iter)
+                points.push(Math.ceil(Math.random() * 10));
+            impleChart(100, 100, 800, 500, points);
+        </script>
     </body>
 </html>
