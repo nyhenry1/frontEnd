@@ -37,12 +37,15 @@
 /*          for(iter = 0; iter < showPointNum; ++iter)
                 columns.appendChild(genIndSquare(iter, points[iter], colBloTop, colBloHeight, widthUnit, heightUnit));  
 */
-            var circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
-            circle.setAttribute('cx', 100);
-            circle.setAttribute('cy', 100);
-            circle.setAttribute('r', 100);
-            circle.setAttribute('fill', 'red');
-            columns.appendChild(circle);
+
+            var line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+            line.setAttribute('x1', 0);
+            line.setAttribute('y1', 0);
+            line.setAttribute('x2', 100);
+            line.setAttribute('y2', 100);
+            line.setAttribute('stroke', 'rgb(255, 0, 0)');
+            line.setAttribute('stoke-width', '2');
+            columns.appendChild(line);
         }
 
         function createColumns(colBloTop, colBloLeft, colBloWidth, colBloHeight, points, showNum){
