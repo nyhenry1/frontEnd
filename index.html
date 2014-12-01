@@ -21,6 +21,21 @@
             var incSum = widthUnit; 
             return square;    
         }
+
+
+        function genIndLine(iter, xPre, yPre, xCur, yCur){
+            var line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+            line.setAttribute('x1', xPre);
+            line.setAttribute('y1', yPre);
+            line.setAttribute('x2', xCur);
+            line.setAttribute('y2', yCur);
+            
+            line.setAttribute('stroke', 'rgb(255, 0, 0)');
+            line.setAttribute('stroke-width', '1');
+            return line;
+        }
+
+
             
         function impleColumns(colBloTop, colBloLeft, colBloWidth, colBloHeight, colBorderWidth, points, showNum){
             colBloWidth -= colBorderWidth * 2;
@@ -38,14 +53,19 @@
                 columns.appendChild(genIndSquare(iter, points[iter], colBloTop, colBloHeight, widthUnit, heightUnit));  
 */
 
-            var line = document.createElementNS("http://www.w3.org/2000/svg", "line");
-            line.setAttribute('x1', 0);
-            line.setAttribute('y1', 0);
-            line.setAttribute('x2', 100);
-            line.setAttribute('y2', 100);
-            line.setAttribute('stroke', 'rgb(255, 0, 0)');
-            line.setAttribute('stoke-width', '2');
-            columns.appendChild(line);
+
+            var xPre = 0, xCur, yPre = colBloHeight - points[0] * heightUnit, yCur;
+
+            for(iter = 1; iter < showPointNum; ++iter)
+            {
+                xCur = iter * widthUnit;
+                yCur = colBloHeight - points[iter] * heightUnit;
+
+                columns.appendChild(genIndLine(iter, xPre, yPre, xCur, yCur));
+
+                xPre = xCur;
+                yPre = yCur;
+            }
         }
 
         function createColumns(colBloTop, colBloLeft, colBloWidth, colBloHeight, points, showNum){
