@@ -22,9 +22,9 @@
             return square;    
         }
 
-
         function genIndLine(iter, xPre, yPre, xCur, yCur){
             var line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+            line.id ="line" + iter;
             line.setAttribute('x1', xPre);
             line.setAttribute('y1', yPre);
             line.setAttribute('x2', xCur);
@@ -35,29 +35,53 @@
             return line;
         }
 
+        function colOnMouseOver(event){
+                var posx =  document.getElementById("posx");
+                var circle = document.getElementById("circle");
+                
+                var columns = document.getElementById("svg");
+                var circleCX = event.clientX - columns.parentLeftOff;
 
-            
-        function impleColumns(colBloTop, colBloLeft, colBloWidth, colBloHeight, colBorderWidth, points, showNum){
+                var pointI = Math.round(circleCX/columns.widthUnit); 
+                circle.setAttribute('cx', pointI * columns.widthUnit);
+                circle.setAttribute('cy', columns.colBloHeight - columns.points[pointI] * columns.heightUnit);
+                alert("event triggered");
+        }
+
+        function impleColumns(colBloTop, colBloLeft, colBloWidth, colBloHeight, colBorderWidth, points, showNum, parentLeftOff){
             colBloWidth -= colBorderWidth * 2;
             colBloHeight -= colBorderWidth * 2;
             var columns = document.getElementById("svg");
             var maxHeight = 0; 
             var showPointNum = Math.min(points.length, showNum);
+            columns.showNum = showPointNum;
+            
             for(iter = 0; iter < showPointNum; ++iter)
                 maxHeight = Math.max(points[iter], maxHeight);  
 
             var widthUnit = colBloWidth / (showPointNum - 1);
             var heightUnit = colBloHeight/ maxHeight;
+            columns.points = points;
+            columns.widthUnit = widthUnit;
+            columns.heightUnit = heightUnit;
+            columns.colBloHeight = colBloHeight;
+            columns.parentLeftOff = parentLeftOff;
+
+            columns.addEventListener("mousemove", function colOnMouseOver(event){
+                var posx =  document.getElementById("posx");
+                var circle = document.getElementById("circle");
+                
+                var columns = document.getElementById("svg");
+                var circleCX = event.clientX - columns.parentLeftOff;
+
+                var pointI = Math.round(circleCX/columns.widthUnit); 
+                circle.setAttribute('cx', pointI * columns.widthUnit);
+                circle.setAttribute('cy', columns.colBloHeight - columns.points[pointI] * columns.heightUnit);
+            });
             
-/*          for(iter = 0; iter < showPointNum; ++iter)
-                columns.appendChild(genIndSquare(iter, points[iter], colBloTop, colBloHeight, widthUnit, heightUnit));  
-*/
-
-
             var xPre = 0, xCur, yPre = colBloHeight - points[0] * heightUnit, yCur;
 
-            for(iter = 1; iter < showPointNum; ++iter)
-            {
+            for(iter = 1; iter < showPointNum; ++iter){
                 xCur = iter * widthUnit;
                 yCur = colBloHeight - points[iter] * heightUnit;
 
@@ -68,7 +92,7 @@
             }
         }
 
-        function createColumns(colBloTop, colBloLeft, colBloWidth, colBloHeight, points, showNum){
+        function createColumns(colBloTop, colBloLeft, colBloWidth, colBloHeight, points, showNum, parentLeftOff){
             var chart = document.getElementById("chart");
             var columns = document.createElementNS("http://www.w3.org/2000/svg", "svg");
             columns.id = "svg";
@@ -77,12 +101,22 @@
             columns.style.top = addPx(colBloTop);
             columns.style.left = addPx(colBloLeft);
             var colBorderWidth = 5;
-
+            parentLeftOff += colBorderWidth;
+            
             columns.setAttribute('width', colBloWidth - colBorderWidth * 2);
             columns.setAttribute('height', colBloHeight - colBorderWidth * 2);
             columns.style.border = colBorderWidth + "px solid blue";
             chart.appendChild(columns);
-            impleColumns(colBloTop, colBloLeft, colBloWidth, colBloHeight, colBorderWidth, points, showNum);
+            impleColumns(colBloTop, colBloLeft, colBloWidth, colBloHeight, colBorderWidth, points, showNum, parentLeftOff);
+            var circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+            circle.id = "circle";
+            circle.setAttribute('cx', 10);
+            circle.setAttribute('cy', 10);
+            circle.setAttribute('r', 10);
+            circle.setAttribute('stroke', 'black');
+            circle.setAttribute('stroke-width', 3);
+            circle.setAttribute('fill', 'red');
+            columns.appendChild(circle);
         }
 
         function createTimeBut(butTop, butLeft, butWidth, butHeight, text){
@@ -96,7 +130,6 @@
         }
 
         function createButtons(butBloTop, butBloLeft, butBloWidth, butBloHeight, colBloTop, colBloLeft, colBloWidth, colBloHeight, points){
-
             var butBlock = document.createElement("butBlo");
             butBlock.innerHTML = "this is butBlock";
             butBlock.style.position = "absolute";
@@ -120,27 +153,32 @@
 
             weekBut.addEventListener("click", function weekOnClick(){
                 clearColumns();
-                impleColumns(colBloTop, colBloLeft, colBloWidth, colBloHeight, 5, points, 7); 
+                var columns = document.getElementById("svg");
+                impleColumns(colBloTop, colBloLeft, colBloWidth, colBloHeight, 5, points, 7, columns.parentLeftOff); 
             });
 
             oneMonBut.addEventListener("click", function oneMonButOnClick(){
                 clearColumns();
-                impleColumns(colBloTop, colBloLeft, colBloWidth, colBloHeight, 5, points, 30); 
+                var columns = document.getElementById("svg"); 
+                impleColumns(colBloTop, colBloLeft, colBloWidth, colBloHeight, 5, points, 30, columns.parentLeftOff); 
             });
 
             triMonBut.addEventListener("click", function triMonOnClick(){
                 clearColumns();
-                impleColumns(colBloTop, colBloLeft, colBloWidth, colBloHeight, 5, points, 90);
+                var columns = document.getElementById("svg");
+                impleColumns(colBloTop, colBloLeft, colBloWidth, colBloHeight, 5, points, 90, columns.parentLeftOff);
             });
 
             oneYearBut.addEventListener("click", function oneYearOnClick(){
                 clearColumns();
-                impleColumns(colBloTop, colBloLeft, colBloWidth, colBloHeight, 5, points, 365);
+                var columns = document.getElementById("svg");
+                impleColumns(colBloTop, colBloLeft, colBloWidth, colBloHeight, 5, points, 365, columns.parentLeftOff);
             });
 
             maxBut.addEventListener("click", function maxOnClick(){
                 clearColumns();
-                impleColumns(colBloTop, colBloLeft, colBloWidth, colBloHeight, 5, points, 3650);
+                var columns = document.getElementById("svg");
+                impleColumns(colBloTop, colBloLeft, colBloWidth, colBloHeight, 5, points, 3650, columns.parentLeftOff);
             });
 
             butBlock.appendChild(weekBut);
@@ -149,8 +187,8 @@
             butBlock.appendChild(oneYearBut);
             butBlock.appendChild(maxBut);
         }
-
-        function impleChart(charTop, charLeft, charWidth, charHeight, points){
+            
+        function impleChart(charTop, charLeft, charWidth, charHeight, points, parentLeftOff){
 
             var chart = document.getElementById("chart");
             chart.style.position = "absolute";
@@ -158,11 +196,12 @@
             chart.style.left = addPx(charLeft);
             chart.style.height = addPx(charHeight);
             chart.style.width = addPx(charWidth);
-            chart.style.border = "5px solid red";
+            var chartBorderWidth= 5;
+            chart.style.border = chartBorderWidth + "px solid red";
 
             var colBloHeight = charHeight * 0.9;
 
-            createColumns(0, 0, charWidth, colBloHeight, points, 7);
+            createColumns(0, 0, charWidth, colBloHeight, points, 7, charLeft + chartBorderWidth);
             var butBloHeight = charHeight * 0.1;
             createButtons(colBloHeight, 0, charWidth, butBloHeight, 0,  0, charWidth, colBloHeight, points);
         }
@@ -170,7 +209,11 @@
         function clearColumns(){
             var columns = document.getElementById("svg");
             for(iter = columns.childElementCount - 1; iter > -1; --iter)
-                columns.removeChild(columns.children[iter]);
+            {
+                var child = columns.children[iter];
+                if (child.id.substring(0, 4) == "line")
+                    columns.removeChild(child);
+            }
         }
 
         </script>
@@ -178,17 +221,14 @@
 
     <body> hello
         <p id = "demo" > A paragraph</p>
+	    <p id = "posx"> this is posx </p>
+
         <div id = "chart" name = "chart"></div> 
         <script type = "text/javascript">
             var points =[];
             for(iter = 0; iter < 200; ++iter)
                 points.push(Math.ceil(Math.random() * 10));
-            impleChart(100, 100, 800, 500, points);
+            impleChart(100, 100, 800, 500, points, 0);
         </script> 
-    <!--
-        <svg height = "50" width = "500">
-            <line x1 = "0" y1 = "0" x2 = "200" y2 = "200" style = "stroke:rgb(255, 0, 0); stroke-width:2" />
-        </svg>
-    -->
     </body>
 </html>
