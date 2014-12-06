@@ -1,11 +1,16 @@
+<!DOCTYPE html>
 <html>
     <head>
     <script>
 
         var svgURL = "http://www.w3.org/2000/svg";
 
+        /* add px after number */
+    
         function addPx(str)
         { return str + "px"; }
+        
+        /* gen a line */
 
         function genIndLine(iter, xPre, yPre, xCur, yCur){
             var line = document.createElementNS(svgURL, "line");
@@ -19,18 +24,7 @@
             return line;
         }
 
-        function colOnMouseOver(event){
-                var posx =  document.getElementById("posx");
-                var circle = document.getElementById("circle");
-                
-                var columns = document.getElementById("svg");
-                var circleCX = event.clientX - columns.parentLeftOff;
-
-                var pointI = Math.round(circleCX/columns.widthUnit); 
-                circle.setAttribute('cx', pointI * columns.widthUnit);
-                circle.setAttribute('cy', columns.colBloHeight - columns.points[pointI] * columns.heightUnit);
-                alert("event triggered");
-        }
+        /* imple columns add mousemove mouseenter and mouseleave event */ 
 
         function impleColumns(colBloTop, colBloLeft, innerWidth, innerHeight, colBorderWidth, points, showNum, parentLeftOff){
             var columns = document.getElementById("svg"), maxHeight = 0,
@@ -109,72 +103,48 @@
             columns.appendChild(circle);
         }
 
-        function createTimeBut(butTop, butLeft, butWidth, butHeight, text){
+        function createTimeBut(butTop, butLeft, butWidth, butHeight, text, showDayNum){
             var button = document.createElement("button");    
             button.innerHTML = text;
             button.style.position = "absolute";
             button.style.top = addPx(butTop);
             button.style.left = addPx(butLeft);
             button.style.height = butHeight;
+            button.showDayNum = showDayNum;
             return button;
         }
 
-        function createButtons(butBloTop, butBloLeft, butBloWidth, butBloHeight, colBloTop, colBloLeft, colBloWidth, colBloHeight, points){
+        /*
+            create buttonblock
+        */
+
+        function createButtons(butBloTop, butBloLeft, butBloWidth, butBloHeight, butBorderWidth, colBloTop, colBloLeft, colBloWidth, colBloHeight, points){
             var butBlock = document.createElement("butBlo");
             butBlock.style.position = "absolute";
             butBlock.style.top = addPx(butBloTop);
             butBlock.style.left = addPx(butBloLeft);
-            var butBorderWidth = 5;
             butBlock.style.width = addPx(butBloWidth - 2 * butBorderWidth);
             butBlock.style.height = addPx(butBloHeight - 2 * butBorderWidth);
             butBlock.style.border = butBorderWidth + "px solid yellow";
 
             var chart = document.getElementById("chart");
-            var button = document.createElement("button");
 
             chart.appendChild(butBlock);
+                
+            var butName = ["week", "one month", "three month", "one year", "max"];
+            var showDayArr = [7, 30, 90, 365, 3650]; 
+            var butArr = [];
+            
+            for(butI = 0; butI < 5; ++butI){
+                butArr.push(createTimeBut(0, 130 * butI, 30, 20, butName[butI], showDayArr[butI]));
+                butArr[butI].addEventListener("click", function onClick(){
+                    clearColumns();
+                    var columns = document.getElementById("svg");
+                    impleColumns(colBloTop, colBloLeft, colBloWidth, colBloHeight, 5, points, this.showDayNum, columns.parentLeftOff); 
 
-            var weekBut = createTimeBut(0, 0, 30, 20, "week"); 
-            var oneMonBut = createTimeBut(0, 130, 30, 20, "one month");
-            var triMonBut = createTimeBut(0, 260, 30, 20, "three month");
-            var oneYearBut = createTimeBut(0, 390, 30, 20, "one year");
-            var maxBut = createTimeBut(0, 520, 30, 20, "max");
-
-            weekBut.addEventListener("click", function weekOnClick(){
-                clearColumns();
-                var columns = document.getElementById("svg");
-                impleColumns(colBloTop, colBloLeft, colBloWidth, colBloHeight, 5, points, 7, columns.parentLeftOff); 
-            });
-
-            oneMonBut.addEventListener("click", function oneMonButOnClick(){
-                clearColumns();
-                var columns = document.getElementById("svg"); 
-                impleColumns(colBloTop, colBloLeft, colBloWidth, colBloHeight, 5, points, 30, columns.parentLeftOff); 
-            });
-
-            triMonBut.addEventListener("click", function triMonOnClick(){
-                clearColumns();
-                var columns = document.getElementById("svg");
-                impleColumns(colBloTop, colBloLeft, colBloWidth, colBloHeight, 5, points, 90, columns.parentLeftOff);
-            });
-
-            oneYearBut.addEventListener("click", function oneYearOnClick(){
-                clearColumns();
-                var columns = document.getElementById("svg");
-                impleColumns(colBloTop, colBloLeft, colBloWidth, colBloHeight, 5, points, 365, columns.parentLeftOff);
-            });
-
-            maxBut.addEventListener("click", function maxOnClick(){
-                clearColumns();
-                var columns = document.getElementById("svg");
-                impleColumns(colBloTop, colBloLeft, colBloWidth, colBloHeight, 5, points, 3650, columns.parentLeftOff);
-            });
-
-            butBlock.appendChild(weekBut);
-            butBlock.appendChild(oneMonBut);
-            butBlock.appendChild(triMonBut);
-            butBlock.appendChild(oneYearBut);
-            butBlock.appendChild(maxBut);
+                });
+                butBlock.appendChild(butArr[butI]);
+            }
         }
 
         /* 
@@ -198,7 +168,7 @@
 
             var colBloHeight = innerHeight * 0.9, butBloHeight = innerHeight * 0.1;
             createColumns(0, 0, innerWidth, colBloHeight, 5, points, 7, charLeft + charBorderWidth);
-            createButtons(colBloHeight, 0, innerWidth, butBloHeight, 0,  0, innerWidth, colBloHeight, points);
+            createButtons(colBloHeight, 0, innerWidth, butBloHeight, 5, 0,  0, innerWidth, colBloHeight, points);
         }
 
         /*
@@ -208,7 +178,7 @@
         function clearColumns(){
             var columns = document.getElementById("svg");
             for(iter = columns.childElementCount - 1; iter > -1; --iter){
-                var child = columns.children[iter];
+                var child = columns.childNodes[iter];
                 if (child.id.substring(0, 4) === "line")
                     columns.removeChild(child);
             }
