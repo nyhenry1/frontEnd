@@ -2,34 +2,18 @@
     <head>
     <script>
 
+        var svgURL = "http://www.w3.org/2000/svg";
+
         function addPx(str)
         { return str + "px"; }
 
-        function genIndSquare(index, val, colBloTop, colBloHeight, widthUnit, heightUnit){
-            var square = document.createElement("div");
-            square.style.position = "absolute";
-            var leftOff = widthUnit * index;
-            square.style.left = addPx(leftOff);
-            square.style.width = addPx(widthUnit);
-
-            var newHeight = heightUnit * val;
-            square.style.height = addPx(newHeight); 
-            
-            var newTop = colBloTop + colBloHeight - newHeight;
-            square.style.top = addPx(newTop);
-            square.style.background = "red";
-            var incSum = widthUnit; 
-            return square;    
-        }
-
         function genIndLine(iter, xPre, yPre, xCur, yCur){
-            var line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+            var line = document.createElementNS(svgURL, "line");
             line.id ="line" + iter;
             line.setAttribute('x1', xPre);
             line.setAttribute('y1', yPre);
             line.setAttribute('x2', xCur);
             line.setAttribute('y2', yCur);
-            
             line.setAttribute('stroke', 'rgb(255, 0, 0)');
             line.setAttribute('stroke-width', '1');
             return line;
@@ -48,42 +32,43 @@
                 alert("event triggered");
         }
 
-        function impleColumns(colBloTop, colBloLeft, colBloWidth, colBloHeight, colBorderWidth, points, showNum, parentLeftOff){
-            colBloWidth -= colBorderWidth * 2;
-            colBloHeight -= colBorderWidth * 2;
-            var columns = document.getElementById("svg");
-            var maxHeight = 0; 
-            var showPointNum = Math.min(points.length, showNum);
-            columns.showNum = showPointNum;
-            
+        function impleColumns(colBloTop, colBloLeft, innerWidth, innerHeight, colBorderWidth, points, showNum, parentLeftOff){
+            var columns = document.getElementById("svg"), maxHeight = 0,
+                showPointNum = Math.min(points.length, showNum);
+
             for(iter = 0; iter < showPointNum; ++iter)
                 maxHeight = Math.max(points[iter], maxHeight);  
 
-            var widthUnit = colBloWidth / (showPointNum - 1);
-            var heightUnit = colBloHeight/ maxHeight;
+            var widthUnit = innerWidth/ (showPointNum - 1);
+            var heightUnit = innerHeight/ maxHeight;
+
             columns.points = points;
             columns.widthUnit = widthUnit;
             columns.heightUnit = heightUnit;
-            columns.colBloHeight = colBloHeight;
+            columns.innerHeight = innerHeight;
             columns.parentLeftOff = parentLeftOff;
 
             columns.addEventListener("mousemove", function colOnMouseOver(event){
-                var posx =  document.getElementById("posx");
                 var circle = document.getElementById("circle");
-                
                 var columns = document.getElementById("svg");
-                var circleCX = event.clientX - columns.parentLeftOff;
+                var pointI = Math.round((event.clientX - columns.parentLeftOff)/columns.widthUnit); 
 
-                var pointI = Math.round(circleCX/columns.widthUnit); 
                 circle.setAttribute('cx', pointI * columns.widthUnit);
-                circle.setAttribute('cy', columns.colBloHeight - columns.points[pointI] * columns.heightUnit);
+                circle.setAttribute('cy', columns.innerHeight - columns.points[pointI] * columns.heightUnit);
             });
             
-            var xPre = 0, xCur, yPre = colBloHeight - points[0] * heightUnit, yCur;
+            columns.addEventListener("mouseenter", function colOnMouseEnter(event){
+                document.getElementById("circle").style.display = "block";
+            });
 
+            columns.addEventListener("mouseleave", function colOnMouseLeave(event){
+                document.getElementById("circle").style.display = "none";
+            });
+            
+            var xPre = 0, xCur, yPre = innerHeight - points[0] * heightUnit, yCur;
             for(iter = 1; iter < showPointNum; ++iter){
                 xCur = iter * widthUnit;
-                yCur = colBloHeight - points[iter] * heightUnit;
+                yCur = innerHeight - points[iter] * heightUnit;
 
                 columns.appendChild(genIndLine(iter, xPre, yPre, xCur, yCur));
 
@@ -92,23 +77,27 @@
             }
         }
 
-        function createColumns(colBloTop, colBloLeft, colBloWidth, colBloHeight, points, showNum, parentLeftOff){
-            var chart = document.getElementById("chart");
-            var columns = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-            columns.id = "svg";
-            columns.style.position = "absolute";
-            columns.innerHTML = "this is a colBlock";
-            columns.style.top = addPx(colBloTop);
-            columns.style.left = addPx(colBloLeft);
-            var colBorderWidth = 5;
-            parentLeftOff += colBorderWidth;
-            
-            columns.setAttribute('width', colBloWidth - colBorderWidth * 2);
-            columns.setAttribute('height', colBloHeight - colBorderWidth * 2);
+        /* 
+            create a svg element inside chart with name svg
+        */
+
+        function createColumns(colBloTop, colBloLeft, colBloWidth, colBloHeight, colBorderWidth, points, showNum, parentLeftOff){
+            var chart = document.getElementById("chart"),
+                columns = document.createElementNS(svgURL, "svg");
+            columns.setAttribute('id', 'svg');
+            columns.setAttribute('position', 'absolute');
+            columns.setAttribute('top', colBloTop);
+            columns.setAttribute('left', colBloLeft);
+            var innerWidth = colBloWidth - colBorderWidth * 2,
+                innerHeight = colBloHeight - colBorderWidth * 2;
+            columns.setAttribute('width', innerWidth);
+            columns.setAttribute('height', innerHeight);
             columns.style.border = colBorderWidth + "px solid blue";
             chart.appendChild(columns);
-            impleColumns(colBloTop, colBloLeft, colBloWidth, colBloHeight, colBorderWidth, points, showNum, parentLeftOff);
-            var circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+
+            impleColumns(colBloTop, colBloLeft, innerWidth, innerHeight, colBorderWidth, points, showNum, parentLeftOff + colBorderWidth);
+
+            var circle = document.createElementNS(svgURL, "circle");
             circle.id = "circle";
             circle.setAttribute('cx', 10);
             circle.setAttribute('cy', 10);
@@ -116,6 +105,7 @@
             circle.setAttribute('stroke', 'black');
             circle.setAttribute('stroke-width', 3);
             circle.setAttribute('fill', 'red');
+            circle.setAttribute('display', 'none');
             columns.appendChild(circle);
         }
 
@@ -131,7 +121,6 @@
 
         function createButtons(butBloTop, butBloLeft, butBloWidth, butBloHeight, colBloTop, colBloLeft, colBloWidth, colBloHeight, points){
             var butBlock = document.createElement("butBlo");
-            butBlock.innerHTML = "this is butBlock";
             butBlock.style.position = "absolute";
             butBlock.style.top = addPx(butBloTop);
             butBlock.style.left = addPx(butBloLeft);
@@ -187,31 +176,40 @@
             butBlock.appendChild(oneYearBut);
             butBlock.appendChild(maxBut);
         }
+
+        /* 
+            to implement the inner part of a chart 
+            with columns part on the top and buttons part at bottom
+            charWidth is the total width of the chart box
+            chart.style.width is the inner content width
+        */
             
-        function impleChart(charTop, charLeft, charWidth, charHeight, points, parentLeftOff){
+        function impleChart(charTop, charLeft, charWidth, charHeight, charBorderWidth, points, parentLeftOff){
 
             var chart = document.getElementById("chart");
             chart.style.position = "absolute";
             chart.style.top = addPx(charTop);
             chart.style.left = addPx(charLeft);
-            chart.style.height = addPx(charHeight);
-            chart.style.width = addPx(charWidth);
-            var chartBorderWidth= 5;
-            chart.style.border = chartBorderWidth + "px solid red";
+            var innerWidth = charWidth - charBorderWidth * 2,
+                innerHeight = charHeight - charBorderWidth * 2;
+            chart.style.width = addPx(innerWidth);
+            chart.style.height = addPx(innerHeight);
+            chart.style.border = charBorderWidth + "px solid red";
 
-            var colBloHeight = charHeight * 0.9;
-
-            createColumns(0, 0, charWidth, colBloHeight, points, 7, charLeft + chartBorderWidth);
-            var butBloHeight = charHeight * 0.1;
-            createButtons(colBloHeight, 0, charWidth, butBloHeight, 0,  0, charWidth, colBloHeight, points);
+            var colBloHeight = innerHeight * 0.9, butBloHeight = innerHeight * 0.1;
+            createColumns(0, 0, innerWidth, colBloHeight, 5, points, 7, charLeft + charBorderWidth);
+            createButtons(colBloHeight, 0, innerWidth, butBloHeight, 0,  0, innerWidth, colBloHeight, points);
         }
+
+        /*
+            delete child "line" elements of svg
+        */ 
 
         function clearColumns(){
             var columns = document.getElementById("svg");
-            for(iter = columns.childElementCount - 1; iter > -1; --iter)
-            {
+            for(iter = columns.childElementCount - 1; iter > -1; --iter){
                 var child = columns.children[iter];
-                if (child.id.substring(0, 4) == "line")
+                if (child.id.substring(0, 4) === "line")
                     columns.removeChild(child);
             }
         }
@@ -219,16 +217,13 @@
         </script>
     </head>
 
-    <body> hello
-        <p id = "demo" > A paragraph</p>
-	    <p id = "posx"> this is posx </p>
-
-        <div id = "chart" name = "chart"></div> 
+    <body>  
+        <div id = "chart"></div> 
         <script type = "text/javascript">
             var points =[];
-            for(iter = 0; iter < 200; ++iter)
+            for(iter = 0; iter < 500; ++iter)
                 points.push(Math.ceil(Math.random() * 10));
-            impleChart(100, 100, 800, 500, points, 0);
+            impleChart(0, 0, 800, 500, 5, points, 0);
         </script> 
     </body>
 </html>
