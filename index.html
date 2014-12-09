@@ -87,6 +87,9 @@
             columns.setAttribute('width', innerWidth);
             columns.setAttribute('height', innerHeight);
             columns.style.border = colBorderWidth + "px solid blue";
+            var scale = 0.9;
+            columns.style.transform = "scale("+ scale +")";
+            columns.style.webkitTransform = "scale("+scale+")";
             chart.appendChild(columns);
 
             impleColumns(colBloTop, colBloLeft, innerWidth, innerHeight, colBorderWidth, points, showNum, parentLeftOff + colBorderWidth);
