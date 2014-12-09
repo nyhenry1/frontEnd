@@ -27,6 +27,7 @@
         /* imple columns add mousemove mouseenter and mouseleave event */ 
 
         function impleColumns(colBloTop, colBloLeft, innerWidth, innerHeight, colBorderWidth, points, showNum, parentLeftOff, scale){
+            
             var columns = document.getElementById("svg"), maxHeight = 0,
                 showPointNum = Math.min(points.length, showNum);
 
@@ -82,8 +83,6 @@
                 columns = document.createElementNS(svgURL, "svg");
             columns.setAttribute('id', 'svg');
             columns.setAttribute('position', 'absolute');
-            columns.setAttribute('top', colBloTop);
-            columns.setAttribute('left', colBloLeft);
             var innerWidth = colBloWidth - colBorderWidth * 2,
                 innerHeight = colBloHeight - colBorderWidth * 2;
             columns.setAttribute('width', innerWidth);
@@ -96,16 +95,7 @@
 
             impleColumns(colBloTop, colBloLeft, innerWidth, innerHeight, colBorderWidth, points, showNum, parentLeftOff + colBorderWidth + innerWidth * ( 1-scale ) /2.0, scale);
 
-            var circle = document.createElementNS(svgURL, "circle");
-            circle.id = "circle";
-            circle.setAttribute('cx', 10);
-            circle.setAttribute('cy', 10);
-            circle.setAttribute('r', 10);
-            circle.setAttribute('stroke', 'black');
-            circle.setAttribute('stroke-width', 3);
-            circle.setAttribute('fill', 'red');
-            circle.setAttribute('display', 'none');
-            columns.appendChild(circle);
+            
         }
 
         function createTimeBut(butTop, butLeft, butWidth, butHeight, text, showDayNum){
@@ -159,6 +149,31 @@
             chart.style.width is the inner content width
         */
             
+        function createCircle(cirConTop, cirConLeft, cirConWidth, cirConHeight){
+            var circleContainer = document.createElementNS(svgURL, "svg");
+            var cirConborWidth = 5;
+            
+            circleContainer.setAttribute('id', 'cirCont');
+            circleContainer.setAttribute('position', 'absolute');
+
+            circleContainer.setAttribute('width', cirConWidth - 2 * cirConborWidth);
+            circleContainer.setAttribute('height', cirConHeight - 2 * cirConborWidth);
+            circleContainer.style.border = cirConborWidth + "px solid  pink"; 
+            var chart = document.getElementById("chart");
+            chart.appendChild(circleContainer);
+            var circle = document.createElementNS(svgURL, "circle");
+            var columns= document.getElementById("svg");
+            circle.id = "circle";
+            circle.setAttribute('cx', 10);
+            circle.setAttribute('cy', 10);
+            circle.setAttribute('r', 10);
+            circle.setAttribute('stroke', 'black');
+            circle.setAttribute('stroke-width', 3);
+            circle.setAttribute('fill', 'red');
+            circle.setAttribute('display', 'none');
+            columns.appendChild(circle);
+        }
+
         function impleChart(charTop, charLeft, charWidth, charHeight, charBorderWidth, points, parentLeftOff){
 
             var chart = document.getElementById("chart");
@@ -172,8 +187,9 @@
             chart.style.border = charBorderWidth + "px solid red";
 
             var colBloHeight = innerHeight * 0.9, butBloHeight = innerHeight * 0.1;
-            var scale = 0.5;
+            var scale = 0.9;
             createColumns(0, 0, innerWidth, colBloHeight, 5, points, 7, charLeft + charBorderWidth, scale);
+            createCircle(0, 0, innerWidth, colBloHeight);
             createButtons(colBloHeight, 0, innerWidth, butBloHeight, 5, 0,  0, innerWidth, colBloHeight, points);
         }
 
