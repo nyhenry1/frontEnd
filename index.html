@@ -26,7 +26,7 @@
 
         /* imple columns add mousemove mouseenter and mouseleave event */ 
 
-        function impleColumns(colBloTop, colBloLeft, innerWidth, innerHeight, colBorderWidth, points, showNum, parentLeftOff){
+        function impleColumns(colBloTop, colBloLeft, innerWidth, innerHeight, colBorderWidth, points, showNum, parentLeftOff, scale){
             var columns = document.getElementById("svg"), maxHeight = 0,
                 showPointNum = Math.min(points.length, showNum);
 
@@ -40,12 +40,14 @@
             columns.widthUnit = widthUnit;
             columns.heightUnit = heightUnit;
             columns.innerHeight = innerHeight;
+            columns.innerWidth = innerWidth;
             columns.parentLeftOff = parentLeftOff;
+            columns.scale = scale;
 
             columns.addEventListener("mousemove", function colOnMouseOver(event){
                 var circle = document.getElementById("circle");
                 var columns = document.getElementById("svg");
-                var pointI = Math.round((event.clientX - columns.parentLeftOff)/columns.widthUnit); 
+                var pointI = Math.round((event.clientX - columns.parentLeftOff)/(columns.widthUnit * columns.scale)); 
 
                 circle.setAttribute('cx', pointI * columns.widthUnit);
                 circle.setAttribute('cy', columns.innerHeight - columns.points[pointI] * columns.heightUnit);
@@ -75,7 +77,7 @@
             create a svg element inside chart with name svg
         */
 
-        function createColumns(colBloTop, colBloLeft, colBloWidth, colBloHeight, colBorderWidth, points, showNum, parentLeftOff){
+        function createColumns(colBloTop, colBloLeft, colBloWidth, colBloHeight, colBorderWidth, points, showNum, parentLeftOff, scale){
             var chart = document.getElementById("chart"),
                 columns = document.createElementNS(svgURL, "svg");
             columns.setAttribute('id', 'svg');
@@ -87,12 +89,12 @@
             columns.setAttribute('width', innerWidth);
             columns.setAttribute('height', innerHeight);
             columns.style.border = colBorderWidth + "px solid blue";
-            var scale = 0.9;
             columns.style.transform = "scale("+ scale +")";
             columns.style.webkitTransform = "scale("+scale+")";
+            columns.scale = scale;
             chart.appendChild(columns);
 
-            impleColumns(colBloTop, colBloLeft, innerWidth, innerHeight, colBorderWidth, points, showNum, parentLeftOff + colBorderWidth);
+            impleColumns(colBloTop, colBloLeft, innerWidth, innerHeight, colBorderWidth, points, showNum, parentLeftOff + colBorderWidth + innerWidth * ( 1-scale ) /2.0, scale);
 
             var circle = document.createElementNS(svgURL, "circle");
             circle.id = "circle";
@@ -143,7 +145,7 @@
                 butArr[butI].addEventListener("click", function onClick(){
                     clearColumns();
                     var columns = document.getElementById("svg");
-                    impleColumns(colBloTop, colBloLeft, colBloWidth, colBloHeight, 5, points, this.showDayNum, columns.parentLeftOff); 
+                    impleColumns(colBloTop, colBloLeft, colBloWidth, colBloHeight, 5, points, this.showDayNum, columns.parentLeftOff, columns.scale); 
 
                 });
                 butBlock.appendChild(butArr[butI]);
@@ -170,7 +172,8 @@
             chart.style.border = charBorderWidth + "px solid red";
 
             var colBloHeight = innerHeight * 0.9, butBloHeight = innerHeight * 0.1;
-            createColumns(0, 0, innerWidth, colBloHeight, 5, points, 7, charLeft + charBorderWidth);
+            var scale = 0.5;
+            createColumns(0, 0, innerWidth, colBloHeight, 5, points, 7, charLeft + charBorderWidth, scale);
             createButtons(colBloHeight, 0, innerWidth, butBloHeight, 5, 0,  0, innerWidth, colBloHeight, points);
         }
 
