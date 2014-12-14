@@ -28,7 +28,9 @@
 
         function impleColumns(colBloTop, colBloLeft, innerWidth, innerHeight, colBorderWidth, points, showNum, parentLeftOff, scale){
             
-            var columns = document.getElementById("svg"), maxHeight = 0,
+            var columns = document.getElementById("svg"), 
+                colGroup = document.getElementById("colGroup"),
+                maxHeight = 0,
                 showPointNum = Math.min(points.length, showNum);
 
             for(iter = 0; iter < showPointNum; ++iter)
@@ -93,6 +95,10 @@
             columns.scale = scale;
             chart.appendChild(columns);
 
+            var colGroup = document.creaeteElementNS(svgURL, "g");
+            colGroup.setAttribute('id', 'colGroup');
+            columns.appendChild(colGroup);
+
             impleColumns(colBloTop, colBloLeft, innerWidth, innerHeight, colBorderWidth, points, showNum, parentLeftOff + colBorderWidth + innerWidth * ( 1-scale ) /2.0, scale);
 
             
@@ -150,17 +156,6 @@
         */
             
         function createCircle(cirConTop, cirConLeft, cirConWidth, cirConHeight){
-            var circleContainer = document.createElementNS(svgURL, "svg");
-            var cirConborWidth = 5;
-            
-            circleContainer.setAttribute('id', 'cirCont');
-            circleContainer.setAttribute('position', 'absolute');
-
-            circleContainer.setAttribute('width', cirConWidth - 2 * cirConborWidth);
-            circleContainer.setAttribute('height', cirConHeight - 2 * cirConborWidth);
-            circleContainer.style.border = cirConborWidth + "px solid  pink"; 
-            var chart = document.getElementById("chart");
-            chart.appendChild(circleContainer);
             var circle = document.createElementNS(svgURL, "circle");
             var columns= document.getElementById("svg");
             circle.id = "circle";
