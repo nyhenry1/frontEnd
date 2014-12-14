@@ -69,7 +69,7 @@
                 xCur = iter * widthUnit;
                 yCur = innerHeight - points[iter] * heightUnit;
 
-                columns.appendChild(genIndLine(iter, xPre, yPre, xCur, yCur));
+                colGroup.appendChild(genIndLine(iter, xPre, yPre, xCur, yCur));
 
                 xPre = xCur;
                 yPre = yCur;
@@ -90,18 +90,15 @@
             columns.setAttribute('width', innerWidth);
             columns.setAttribute('height', innerHeight);
             columns.style.border = colBorderWidth + "px solid blue";
-            columns.style.transform = "scale("+ scale +")";
-            columns.style.webkitTransform = "scale("+scale+")";
-            columns.scale = scale;
             chart.appendChild(columns);
 
-            var colGroup = document.creaeteElementNS(svgURL, "g");
+            var colGroup = document.createElementNS(svgURL, "g");
             colGroup.setAttribute('id', 'colGroup');
+            colGroup.setAttribute('transform', 'matrix(0.9, 0, 0, 0.9, 0, 0)');
+
             columns.appendChild(colGroup);
 
-            impleColumns(colBloTop, colBloLeft, innerWidth, innerHeight, colBorderWidth, points, showNum, parentLeftOff + colBorderWidth + innerWidth * ( 1-scale ) /2.0, scale);
-
-            
+            impleColumns(colBloTop, colBloLeft, innerWidth, innerHeight, colBorderWidth, points, showNum, parentLeftOff + colBorderWidth, scale);
         }
 
         function createTimeBut(butTop, butLeft, butWidth, butHeight, text, showDayNum){
