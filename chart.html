@@ -50,10 +50,10 @@
             columns.addEventListener("mousemove", function colOnMouseOver(event){
                 var circle = document.getElementById("circle");
                 var columns = document.getElementById("svg");
-                var pointI = Math.round((event.clientX - columns.parentLeftOff)/(columns.widthUnit * columns.scale)); 
+                var pointI = Math.round((event.clientX - (columns.parentLeftOff + scaleLeftOff))/(columns.widthUnit * columns.scale)); 
 
-                circle.setAttribute('cx', (pointI * columns.widthUnit) * columns.scale);
-                circle.setAttribute('cy', (columns.innerHeight - columns.points[pointI] * columns.heightUnit) * columns.scale);
+                circle.setAttribute('cx', (pointI * columns.widthUnit) * columns.scale + scaleLeftOff);
+                circle.setAttribute('cy', (columns.innerHeight - columns.points[pointI] * columns.heightUnit) * columns.scale + scaleTopOff);
             });
             
             columns.addEventListener("mouseenter", function colOnMouseEnter(event){
@@ -69,7 +69,7 @@
                 xCur = iter * widthUnit;
                 yCur = innerHeight - points[iter] * heightUnit;
 
-                colGroup.appendChild(genIndLine(iter, xPre, yPre, xCur, yCur));
+                colGroup.appendChild(genIndLine(iter, xPre + scaleLeftOff , yPre + scaleTopOff , xCur + scaleLeftOff, yCur + scaleTopOff));
 
                 xPre = xCur;
                 yPre = yCur;
