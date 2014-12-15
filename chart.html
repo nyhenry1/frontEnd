@@ -140,7 +140,8 @@
                 butArr[butI].addEventListener("click", function onClick(){
                     clearColumns();
                     var columns = document.getElementById("svg");
-                    impleColumns(colBloTop, colBloLeft, colBloWidth, colBloHeight, 5, points, this.showDayNum, columns.parentLeftOff, columns.scale); 
+                    var colGroup = document.getElementById("colGroup");
+                    impleColumns(colBloTop, colBloLeft, colBloWidth, colBloHeight, 5, points, this.showDayNum, columns.parentLeftOff, colGroup.scaleLeftOff, colGroup.scaleTopOff, columns.scale); 
 
                 });
                 butBlock.appendChild(butArr[butI]);
@@ -192,7 +193,7 @@
         */ 
 
         function clearColumns(){
-            var columns = document.getElementById("svg");
+            var columns = document.getElementById("colGroup");
             for(iter = columns.childElementCount - 1; iter > -1; --iter){
                 var child = columns.childNodes[iter];
                 if (child.id.substring(0, 4) === "line")
