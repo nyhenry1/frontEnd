@@ -52,8 +52,8 @@
                 var columns = document.getElementById("svg");
                 var pointI = Math.round((event.clientX - columns.parentLeftOff)/(columns.widthUnit * columns.scale)); 
 
-                circle.setAttribute('cx', pointI * columns.widthUnit);
-                circle.setAttribute('cy', columns.innerHeight - columns.points[pointI] * columns.heightUnit);
+                circle.setAttribute('cx', (pointI * columns.widthUnit) * columns.scale);
+                circle.setAttribute('cy', (columns.innerHeight - columns.points[pointI] * columns.heightUnit) * columns.scale);
             });
             
             columns.addEventListener("mouseenter", function colOnMouseEnter(event){
