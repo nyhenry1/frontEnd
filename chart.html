@@ -26,7 +26,7 @@
 
         /* imple columns add mousemove mouseenter and mouseleave event */ 
 
-        function impleColumns(colBloTop, colBloLeft, innerWidth, innerHeight, colBorderWidth, points, showNum, parentLeftOff, scale){
+        function impleColumns(colBloTop, colBloLeft, innerWidth, innerHeight, colBorderWidth, points, showNum, parentLeftOff, scaleLeftOff, scaleTopOff, scale){
             
             var columns = document.getElementById("svg"), 
                 colGroup = document.getElementById("colGroup"),
@@ -98,7 +98,7 @@
 
             columns.appendChild(colGroup);
 
-            impleColumns(colBloTop, colBloLeft, innerWidth, innerHeight, colBorderWidth, points, showNum, parentLeftOff + colBorderWidth, scale);
+            impleColumns(colBloTop, colBloLeft, innerWidth, innerHeight, colBorderWidth, points, showNum, parentLeftOff + colBorderWidth, innerWidth * (1 - scale) / 2, innerHeight * (1-scale) /2, scale);
         }
 
         function createTimeBut(butTop, butLeft, butWidth, butHeight, text, showDayNum){
