@@ -46,6 +46,7 @@
             columns.innerWidth = innerWidth;
             columns.parentLeftOff = parentLeftOff;
             columns.scale = scale;
+            columns.showPointNum = showPointNum;
             colGroup.scaleLeftOff = scaleLeftOff;
             colGroup.scaleTopOff = scaleTopOff;
 
@@ -53,8 +54,9 @@
                 var circle = document.getElementById("circle");
                 var columns = document.getElementById("svg");
                 var pointI = Math.round((event.clientX - (columns.parentLeftOff + colGroup.scaleLeftOff))/(columns.widthUnit * columns.scale)); 
+                pointI =Math.min(Math.max(0, pointI), showPointNum - 1),  
 
-                circle.setAttribute('cx', (pointI * columns.widthUnit) * columns.scale + colGroup.scaleLeftOff);
+                circle.setAttribute('cx', (pointI * columns.widthUnit) * columns.scale + colGroup.scaleLeftOff) ;
                 circle.setAttribute('cy', (columns.innerHeight - columns.points[pointI] * columns.heightUnit) * columns.scale + colGroup.scaleTopOff);
             });
             
