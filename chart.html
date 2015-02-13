@@ -31,15 +31,15 @@
             var columns = document.getElementById("svg"), 
                 colGroup = document.getElementById("colGroup"),
                 maxHeight = 0,
-                showPointNum = Math.min(points.length, showNum);
+                showPointNum = Math.min(points[1].length, showNum);
 
             for(iter = 0; iter < showPointNum; ++iter)
-                maxHeight = Math.max(points[iter], maxHeight);  
+                maxHeight = Math.max(points[1][iter], maxHeight);  
 
             var widthUnit = innerWidth/ (showPointNum - 1);
             var heightUnit = innerHeight/ maxHeight;
 
-            columns.points = points;
+            columns.points = points[1];
             columns.widthUnit = widthUnit;
             columns.heightUnit = heightUnit;
             columns.innerHeight = innerHeight;
@@ -68,16 +68,73 @@
                 document.getElementById("circle").style.display = "none";
             });
             
-            var xPre = 0, xCur, yPre = innerHeight - points[0] * heightUnit, yCur;
+            var xPre = 0, xCur, yPre = innerHeight - points[1][0] * heightUnit, yCur;
             for(iter = 1; iter < showPointNum; ++iter){
                 xCur = iter * widthUnit;
-                yCur = innerHeight - points[iter] * heightUnit;
+                yCur = innerHeight - points[1][iter] * heightUnit;
 
                 colGroup.appendChild(genIndLine(iter, xPre + scaleLeftOff , yPre + scaleTopOff , xCur + scaleLeftOff, yCur + scaleTopOff));
 
                 xPre = xCur;
                 yPre = yCur;
             }
+
+            var dateBar = document.createElementNS(svgURL, "text");
+            dateBar.setAttribute('id', 'dateBar');
+            dateBar.setAttribute('x', '30');
+            dateBar.setAttribute('y', '420');
+            dateBar.setAttribute('fill', 'red');
+            dateBar.innerHTML ="hello1";
+            colGroup.appendChild(dateBar);
+            
+            var dateBar2 = document.createElementNS(svgURL, "text");
+            dateBar2.setAttribute('id', 'dateBar');
+            dateBar2.setAttribute('x', '130');
+            dateBar2.setAttribute('y', '420');
+            dateBar2.setAttribute('fill', 'red');
+            dateBar2.innerHTML ="hello2";
+            colGroup.appendChild(dateBar2);
+            
+            var dateBar3 = document.createElementNS(svgURL, "text");
+            dateBar3.setAttribute('id', 'dateBar');
+            dateBar3.setAttribute('x', '230');
+            dateBar3.setAttribute('y', '420');
+            dateBar3.setAttribute('fill', 'red');
+            dateBar3.innerHTML ="hello3";
+            colGroup.appendChild(dateBar3);
+            
+            var dateBar4 = document.createElementNS(svgURL, "text");
+            dateBar4.setAttribute('id', 'dateBar');
+            dateBar4.setAttribute('x', '330');
+            dateBar4.setAttribute('y', '420');
+            dateBar4.setAttribute('fill', 'red');
+            dateBar4.innerHTML ="hello4";
+            colGroup.appendChild(dateBar4);
+            
+            var dateBar5 = document.createElementNS(svgURL, "text");
+            dateBar5.setAttribute('id', 'dateBar');
+            dateBar5.setAttribute('x', '430');
+            dateBar5.setAttribute('y', '420');
+            dateBar5.setAttribute('fill', 'red');
+            dateBar5.innerHTML ="hello5";
+            colGroup.appendChild(dateBar5);
+        
+            var dateBar6 = document.createElementNS(svgURL, "text");
+            dateBar6.setAttribute('id', 'dateBar');
+            dateBar6.setAttribute('x', '530');
+            dateBar6.setAttribute('y', '420');
+            dateBar6.setAttribute('fill', 'red');
+            dateBar6.innerHTML ="hello6";
+            colGroup.appendChild(dateBar6);
+
+            var dateBar7 = document.createElementNS(svgURL, "text");
+            dateBar7.setAttribute('id', 'dateBar');
+            dateBar7.setAttribute('x', '630');
+            dateBar7.setAttribute('y', '420');
+            dateBar7.setAttribute('fill', 'red');
+            dateBar7.innerHTML ="hello7";
+            colGroup.appendChild(dateBar7);
+
         }
 
         /* 
@@ -102,7 +159,7 @@
 
             columns.appendChild(colGroup);
 
-            impleColumns(colBloTop, colBloLeft, innerWidth, innerHeight, colBorderWidth, points, showNum, parentLeftOff + colBorderWidth, innerWidth * (1 - scale) / 2, innerHeight * (1-scale) /2, scale);
+            impleColumns(colBloTop, colBloLeft, innerWidth, innerHeight, colBorderWidth, points, showNum, parentLeftOff + colBorderWidth, innerWidth * (1 - scale) / 2, innerHeight * (1 - scale) / 2, scale);
         }
 
         function createTimeBut(butTop, butLeft, butWidth, butHeight, text, showDayNum){
@@ -144,7 +201,6 @@
                     var columns = document.getElementById("svg");
                     var colGroup = document.getElementById("colGroup");
                     impleColumns(colBloTop, colBloLeft, colBloWidth, colBloHeight, 5, points, this.showDayNum, columns.parentLeftOff, colGroup.scaleLeftOff, colGroup.scaleTopOff, columns.scale); 
-
                 });
                 butBlock.appendChild(butArr[butI]);
             }
@@ -210,9 +266,16 @@
         <div id = "chart"></div> 
         <script type = "text/javascript">
             var points =[];
+            points[0] = [2009, 2010, 2011, 2012, 2013, 2014, 2015];
+            points[1] = new Array();
             for(iter = 0; iter < 500; ++iter)
-                points.push(Math.ceil(Math.random() * 10));
+                points[1].push(Math.ceil(Math.random() * 10));
             impleChart(0, 0, 800, 500, 5, points, 0);
         </script> 
+<!--
+        <svg height = "30", width = "200">
+            <text x = "0" y = "15" fill = "red"> I love svg</text>
+        </svg>
+-->
     </body>
 </html>
