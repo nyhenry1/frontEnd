@@ -79,62 +79,32 @@
                 yPre = yCur;
             }
 
-            var dateBar = document.createElementNS(svgURL, "text");
-            dateBar.setAttribute('id', 'dateBar');
-            dateBar.setAttribute('x', '30');
-            dateBar.setAttribute('y', '420');
-            dateBar.setAttribute('fill', 'red');
-            dateBar.innerHTML ="hello1";
-            colGroup.appendChild(dateBar);
-            
-            var dateBar2 = document.createElementNS(svgURL, "text");
-            dateBar2.setAttribute('id', 'dateBar');
-            dateBar2.setAttribute('x', '130');
-            dateBar2.setAttribute('y', '420');
-            dateBar2.setAttribute('fill', 'red');
-            dateBar2.innerHTML ="hello2";
-            colGroup.appendChild(dateBar2);
-            
-            var dateBar3 = document.createElementNS(svgURL, "text");
-            dateBar3.setAttribute('id', 'dateBar');
-            dateBar3.setAttribute('x', '230');
-            dateBar3.setAttribute('y', '420');
-            dateBar3.setAttribute('fill', 'red');
-            dateBar3.innerHTML ="hello3";
-            colGroup.appendChild(dateBar3);
-            
-            var dateBar4 = document.createElementNS(svgURL, "text");
-            dateBar4.setAttribute('id', 'dateBar');
-            dateBar4.setAttribute('x', '330');
-            dateBar4.setAttribute('y', '420');
-            dateBar4.setAttribute('fill', 'red');
-            dateBar4.innerHTML ="hello4";
-            colGroup.appendChild(dateBar4);
-            
-            var dateBar5 = document.createElementNS(svgURL, "text");
-            dateBar5.setAttribute('id', 'dateBar');
-            dateBar5.setAttribute('x', '430');
-            dateBar5.setAttribute('y', '420');
-            dateBar5.setAttribute('fill', 'red');
-            dateBar5.innerHTML ="hello5";
-            colGroup.appendChild(dateBar5);
-        
-            var dateBar6 = document.createElementNS(svgURL, "text");
-            dateBar6.setAttribute('id', 'dateBar');
-            dateBar6.setAttribute('x', '530');
-            dateBar6.setAttribute('y', '420');
-            dateBar6.setAttribute('fill', 'red');
-            dateBar6.innerHTML ="hello6";
-            colGroup.appendChild(dateBar6);
+            var dateArr =[]
+            var dateXOff = -100;
+            for(iter = 0; iter < 7; ++ iter)
+            {
+                var dateBar = document.createElementNS(svgURL, "text");
+                dateArr.push(dateBar);
+                dateArr[iter].setAttribute('id', 'dateBar');
+                dateXOff += 130;
+                dateArr[iter].setAttribute('x', dateXOff);
+                dateArr[iter].setAttribute('y', '430');
+                dateArr[iter].setAttribute('fill', 'red');
+                dateArr[iter].innerHTML =points[0][iter];
+                colGroup.appendChild(dateArr[iter]);
+            } 
 
-            var dateBar7 = document.createElementNS(svgURL, "text");
-            dateBar7.setAttribute('id', 'dateBar');
-            dateBar7.setAttribute('x', '630');
-            dateBar7.setAttribute('y', '420');
-            dateBar7.setAttribute('fill', 'red');
-            dateBar7.innerHTML ="hello7";
-            colGroup.appendChild(dateBar7);
-
+            var captionText = "endu chart";
+            var caption = document.createElementNS(svgURL, "text");
+            caption.setAttribute('id', captionText);
+//            caption.setAttribute('transform', 'matrix(1.0, 0, 0, 1.0, 0, 0)');
+//            caption.setAttribute('transform', 'matrix(0.866, 0.5, -0.5, 0.866, 0, 0)');
+            caption.setAttribute('transform', 'matrix(0, -1.0, 1.0, 0, 10, 250)');
+            caption.setAttribute('x', '0');
+            caption.setAttribute('y', '0');
+            caption.setAttribute('fill', 'green');
+            caption.innerHTML = captionText;
+            colGroup.appendChild(caption);
         }
 
         /* 
@@ -215,6 +185,7 @@
             
         function createCircle(cirConTop, cirConLeft, cirConWidth, cirConHeight){
             var circle = document.createElementNS(svgURL, "circle");
+            var label = document.createElementNS(svgURL, "rect");
             var columns= document.getElementById("svg");
             circle.id = "circle";
             circle.setAttribute('cx', 10);
@@ -225,7 +196,16 @@
             circle.setAttribute('fill', 'red');
             circle.setAttribute('display', 'none');
             columns.appendChild(circle);
+
+            label.id = "rect";
+            label.setAttribute('width', 10);
+            label.setAttribute('height', 10);
+            label.setAttribute('fill', 'rgb(0,0,255)');
+            label.setAttribute('stroke-width', 3);
+            label.setAttribute('stroke', 'rgb(0, 0, 0)');
+//            columns.appendChild(label);
         }
+
 
         function impleChart(charTop, charLeft, charWidth, charHeight, charBorderWidth, points, parentLeftOff){
 
@@ -244,6 +224,7 @@
             createColumns(0, 0, innerWidth, colBloHeight, 5, points, 7, charLeft + charBorderWidth, scale);
             createCircle(0, 0, innerWidth, colBloHeight);
             createButtons(colBloHeight, 0, innerWidth, butBloHeight, 5, 0,  0, innerWidth, colBloHeight, points);
+            createCaption(0, 0, 'hello', 90);
         }
 
         /*
@@ -266,7 +247,7 @@
         <div id = "chart"></div> 
         <script type = "text/javascript">
             var points =[];
-            points[0] = [2009, 2010, 2011, 2012, 2013, 2014, 2015];
+            points[0] = ['2009', '2010', '2011', '2012', '2013', '2014', '2015'];
             points[1] = new Array();
             for(iter = 0; iter < 500; ++iter)
                 points[1].push(Math.ceil(Math.random() * 10));
