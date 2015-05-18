@@ -1,0 +1,99 @@
+{% extends "member_service/base.html" %}    
+
+    {% load staticfiles %}
+
+    {% block title %}Glogou Featured Client in Education Sector{% endblock %}
+    {% block description %}{% endblock %}
+    {% block keyword %}{% endblock %}
+
+    {% block content %}
+
+        <!-- Page Content -->
+        <script type = "text/javascript">
+            function throttle(callback, limit){
+                var wait = false;
+                return function(){
+                    if(!wait){
+                        callback.call();
+                        wait = true;
+                        setTimeout(function(){
+                            wait = false;
+                        }, limit);
+                    }
+                } 
+            } 
+
+            function loadJSON(){
+                var data_file="http://127.0.0.1:8000/tempJSON";
+                var http_request = new XMLHttpRequest();
+                try{
+                    http_request = new XMLHttpRequest("Msxml2.XMLHTTP");
+                }catch(e){
+                    try{
+                                http_request = new ActiveXObeject("Microsoft.XMLHTTP");
+                    }catch(e){
+                        try{
+                            http_request = new ActiveXObject("Microsoft.XMLHTTP");
+                        }catch(e){
+                            alert("Your browser broke!");
+                            return false;
+                        }
+                    }
+                }
+
+                http_request.onreadystatechange = function(){
+                    if(http_request.readyState == 4){
+                        var jsonObj = JSON.parse(http_request.responseText);
+                        jsonObj.result.sort(function(a, b){
+                            return new Date(a.date)- new Date(b.date);
+                        });
+
+                        var points = [];
+                        points[0] = [];
+                        points[1] = [];
+                        points[2] = []; 
+                        points[3] = [];
+                        points[4] = [];
+    
+                        for(iter = 0; iter < jsonObj.result.length; ++ iter)
+                        {
+                            points[0].push(jsonObj.result[iter].date);
+                            points[1].push(Math.ceil(jsonObj.result[iter].sumClick));
+                            points[2].push(jsonObj.result[iter].sumRMBCost);
+                            points[3].push(Math.round(jsonObj.result[iter].sumCPC/6.3 * 1000)/1000);
+                            points[4].push(jsonObj.result[iter].sumImpression);
+                        }
+
+                        var chart = document.getElementById("chart"); 
+                        var parentOffset = cumulativeOffset(chart);
+                        impleChart(0, 0, 800, 500, 5, 'green', points, parentOffset.left);
+                    }
+                }
+
+                http_request.open("GET", data_file, true);
+                http_request.send();
+            }
+            window.onresize = throttle(loadJSON, 100);
+
+        </script>
+        <div id="page-wrapper">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1 class="page-header"></h1>
+                    <!--start sample data chart test -->
+                    <script src = "{% static 'javascript/chart.js' %}"></script>
+                    <script src = "{% static 'javascript/position.js' %}"></script>
+                                <div id = "chart"></div>
+                    <!-- end of sample data chart test -->
+                    <script type = "text/javascript">
+                        loadJSON(); 
+                    </script>
+                </div>
+                <!-- /.col-lg-12 -->
+            </div>
+            <!-- /.row -->
+        </div>
+        <!-- /#page-wrapper -->
+    </div>
+    <!-- /#wrapper -->
+    {% endblock %}
